@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#1a1916;--ink-soft:#6b6860;--ink-muted:#a8a59f;
+  --surface:#faf9f7;--card:#ffffff;
+  --accent:#2d5a3d;--accent-light:#eef4f0;--accent-muted:#7aab8a;
+  --blue:#4a6fa5;--purple:#8b5e8b;--gold:#c9a96e;--weekly:#2d5a3d;--monthly:#4a6fa5;
+  --border:rgba(26,25,22,0.08);--border-mid:rgba(26,25,22,0.14);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;border-bottom:1px solid var(--border);background:var(--surface);}
+.logo-word{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;}
+.logo-word em{font-style:italic;color:var(--accent);}
+.logo-byline{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-muted);margin-top:2px;}
+
+.tabs-bar{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);padding:0 48px;overflow-x:auto;}
+.tab-btn{padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:var(--ink-muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;}
+.tab-btn:hover{color:var(--ink-soft);}
+.tab-btn.active{color:var(--ink);font-weight:500;border-bottom-color:var(--accent);}
+.tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+.wrap{max-width:660px;margin:0 auto;padding:48px 48px;}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:12px;}
+.browse-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ink);line-height:1.15;margin-bottom:10px;}
+.browse-title em{font-style:italic;color:var(--accent);}
+.browse-sub{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.7;margin-bottom:36px;}
+.back-link{font-size:13px;color:var(--ink-muted);cursor:pointer;margin-bottom:24px;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--ink-soft);}
+
+/* CARDS */
+.prompt-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:2px;}
+.prompt-card:hover{border-color:var(--border-mid);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,25,22,0.05);}
+.prompt-card.featured{border-color:var(--accent);position:relative;overflow:hidden;}
+.prompt-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
+.card-tag{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:5px;}
+.card-q{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--ink);line-height:1.3;}
+.card-meta{font-size:12px;color:var(--ink-muted);margin-top:5px;}
+.card-arrow{color:var(--ink-muted);font-size:18px;transition:transform 0.15s;}
+.prompt-card:hover .card-arrow{transform:translateX(3px);color:var(--accent);}
+
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden;margin-bottom:2px;}
+.review-card:hover{border-color:var(--border-mid);transform:translateY(-1px);box-shadow:0 4px 20px rgba(26,25,22,0.06);}
+.review-card.featured{border-color:var(--accent);}
+.review-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
+.review-card-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--ink);margin-bottom:4px;}
+.review-card-sub{font-size:13px;font-weight:300;color:var(--ink-soft);margin-bottom:14px;}
+.pills-row{display:flex;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-soft);}
+.pill-dot{width:6px;height:6px;border-radius:50%;}
+.start-btn{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;border:none;border-radius:7px;padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
+
+/* SESSION */
+.steps-row{display:flex;align-items:center;gap:0;margin-bottom:36px;overflow-x:auto;}
+.step-item{display:flex;align-items:center;gap:7px;cursor:pointer;flex-shrink:0;}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;border:1px solid var(--border);color:var(--ink-muted);background:var(--card);transition:all 0.2s;flex-shrink:0;}
+.step-num.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.step-num.done{background:var(--accent-light);color:var(--accent);border-color:var(--accent);font-size:10px;}
+.step-lbl{font-size:11px;color:var(--ink-muted);white-space:nowrap;}
+.step-lbl.active{color:var(--ink);font-weight:500;}
+.step-lbl.done{color:var(--accent-muted);}
+.step-con{flex:1;height:1px;background:var(--border);margin:0 8px;min-width:12px;}
+.step-con.done{background:var(--accent-muted);}
+
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;}
+.s-tag{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:8px;}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--ink);margin-bottom:6px;line-height:1.2;}
+.s-title em{font-style:italic;color:var(--accent);}
+.s-prompt{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.7;margin-bottom:18px;font-style:italic;}
+.timer-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.t-display{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--ink);min-width:58px;transition:color 0.3s;}
+.t-display.run{color:var(--accent);}
+.t-display.fin{color:var(--ink-muted);}
+.tbtn{padding:7px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;border:none;}
+.tbtn.go{background:var(--accent);color:#fff;}
+.tbtn.pau{background:var(--surface);color:var(--ink);border:1px solid var(--border-mid);}
+.tbtn.rst{background:none;border:1px solid var(--border);color:var(--ink-muted);font-size:11px;}
+.prog{height:2px;background:var(--border);border-radius:1px;margin-bottom:14px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 1s linear;width:0%;}
+textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;line-height:1.8;color:var(--ink);resize:none;outline:none;transition:border-color 0.15s;}
+textarea:focus{border-color:var(--border-mid);}
+textarea::placeholder{color:var(--ink-muted);font-style:italic;}
+.s-foot{display:flex;justify-content:space-between;margin-top:6px;}
+.wc{font-size:11px;color:var(--ink-muted);}
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.btn-next{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.btn-prev{background:none;border:1px solid var(--border-mid);border-radius:8px;padding:11px 18px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-soft);cursor:pointer;}
+
+/* DONE */
+.done-wrap{max-width:520px;margin:0 auto;padding:64px 48px;text-align:center;}
+.done-mark{width:52px;height:52px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;}
+.done-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);margin-bottom:10px;}
+.done-title em{font-style:italic;color:var(--accent);}
+.done-sub{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.7;margin-bottom:28px;}
+.done-actions{display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;}
+.dbp{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
+.dbs{background:none;border:1px solid var(--border-mid);border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+
+/* HIDDEN */
+.page{display:none;}
+</style>
+
+<nav>
+  <div>
+    <div class="logo-word">Clear<em>day</em></div>
+    <div class="logo-byline">by Dari</div>
+  </div>
+</nav>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('daily')" id="t-daily"><span class="tab-dot" style="background:var(--gold)"></span>Daily · 5 min</button>
+  <button class="tab-btn" onclick="switchTab('weekly')" id="t-weekly"><span class="tab-dot" style="background:var(--weekly)"></span>Weekly · 20 min</button>
+  <button class="tab-btn" onclick="switchTab('monthly')" id="t-monthly"><span class="tab-dot" style="background:var(--blue)"></span>Monthly · 40 min</button>
+  <button class="tab-btn" onclick="switchTab('quarterly')" id="t-quarterly"><span class="tab-dot" style="background:#7a9e5a"></span>Quarterly · 60 min</button>
+  <button class="tab-btn" onclick="switchTab('yearly')" id="t-yearly"><span class="tab-dot" style="background:var(--purple)"></span>Yearly · 90 min</button>
+</div>
+
+<!-- ═══ DAILY ═══ -->
+<div id="daily-browse" class="page">
+  <div class="wrap">
+    <p class="eyebrow">Daily · 5 min</p>
+    <h1 class="browse-title">Pick today's <em>prompt.</em></h1>
+    <p class="browse-sub">One question. Five minutes. Write without stopping.</p>
+    <div id="daily-cards"></div>
+  </div>
+</div>
+<div id="daily-session" class="page">
+  <div class="wrap">
+    <span class="back-link" onclick="show('daily-browse')">← Back</span>
+    <p class="eyebrow">Daily · 5 min</p>
+    <h2 class="s-title" id="d-q" style="font-size:28px;margin-bottom:8px;"></h2>
+    <p class="s-prompt">Write freely. Don't edit. Don't stop.</p>
+    <div class="timer-row"><div class="t-display" id="d-t">5:00</div><button class="tbtn go" id="d-b" onclick="tToggle('d')">Start timer</button><button class="tbtn rst" onclick="tReset('d',300)">Reset</button></div>
+    <div class="prog"><div class="prog-fill" id="d-p"></div></div>
+    <textarea id="d-w" rows="10" placeholder="Start writing here…"></textarea>
+    <div class="s-foot"><span class="wc" id="d-wc">0 words</span><span class="wc">Nothing is saved.</span></div>
+    <button class="btn-next" style="margin-top:16px;width:100%;justify-content:center;" onclick="show('daily-done')">I'm done writing →</button>
+  </div>
+</div>
+<div id="daily-done" class="page">
+  <div class="done-wrap">
+    <div class="done-mark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4L16 6" stroke="#2d5a3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2 class="done-title">Session <em>complete.</em></h2>
+    <p class="done-sub">You showed up. That's the whole practice. See you tomorrow.</p>
+    <div class="done-actions"><button class="dbp" onclick="show('daily-browse')">Back to sessions</button><button class="dbs" onclick="switchTab('weekly')">Try the weekly session →</button></div>
+  </div>
+</div>
+
+<!-- ═══ WEEKLY ═══ -->
+<div id="weekly-browse" class="page">
+  <div class="wrap">
+    <p class="eyebrow">Weekly · 20 min</p>
+    <h1 class="browse-title">This week, <em>reviewed.</em></h1>
+    <p class="browse-sub">Three sections. Seven minutes each. Look back, learn, set your direction.</p>
+    <div class="review-card featured" onclick="startReview('weekly')">
+      <p class="card-tag" style="margin-bottom:8px;">This week's session</p>
+      <p class="review-card-title">The weekly review</p>
+      <p class="review-card-sub">3 prompts · 20 minutes · structured reflection</p>
+      <div class="pills-row">
+        <div class="pill"><div class="pill-dot" style="background:var(--gold)"></div>Look back</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--blue)"></div>Learn</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--accent)"></div>Look ahead</div>
+      </div>
+      <button class="start-btn">Begin this week's review →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MONTHLY ═══ -->
+<div id="monthly-browse" class="page">
+  <div class="wrap">
+    <p class="eyebrow">Monthly · 40 min</p>
+    <h1 class="browse-title">The month, <em>seen clearly.</em></h1>
+    <p class="browse-sub">Three prompts that help you find the pattern, understand your energy, and set focus for what's next.</p>
+    <div class="review-card featured" onclick="startReview('monthly')">
+      <p class="card-tag" style="margin-bottom:8px;">This month's session</p>
+      <p class="review-card-title">The monthly review</p>
+      <p class="review-card-sub">3 prompts · 40 minutes · pattern recognition</p>
+      <div class="pills-row">
+        <div class="pill"><div class="pill-dot" style="background:var(--gold)"></div>Look back</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--blue)"></div>Learn</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--accent)"></div>Look ahead</div>
+      </div>
+      <button class="start-btn">Begin this month's review →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUARTERLY ═══ -->
+<div id="quarterly-browse" class="page">
+  <div class="wrap">
+    <p class="eyebrow">Quarterly · 60 min</p>
+    <h1 class="browse-title">Ninety days, <em>distilled.</em></h1>
+    <p class="browse-sub">The session that changes how you see your year. Look back at 90 days, find the thread, set your direction forward.</p>
+    <div class="review-card featured" onclick="startReview('quarterly')">
+      <p class="card-tag" style="margin-bottom:8px;">This quarter's session</p>
+      <p class="review-card-title">The quarterly reset</p>
+      <p class="review-card-sub">4 prompts · 60 minutes · deep reflection</p>
+      <div class="pills-row">
+        <div class="pill"><div class="pill-dot" style="background:var(--gold)"></div>Look back</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--blue)"></div>Learn</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--accent)"></div>Look ahead</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--purple)"></div>Commit</div>
+      </div>
+      <button class="start-btn">Begin this quarter's reset →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ YEARLY ═══ -->
+<div id="yearly-browse" class="page">
+  <div class="wrap">
+    <p class="eyebrow">Yearly · 90 min</p>
+    <h1 class="browse-title">The year, <em>in full.</em></h1>
+    <p class="browse-sub">The most important session of the year. What happened, what it meant, and who you want to become next year.</p>
+    <div class="review-card featured" onclick="startReview('yearly')">
+      <p class="card-tag" style="margin-bottom:8px;">Annual session</p>
+      <p class="review-card-title">Year in review + vision</p>
+      <p class="review-card-sub">5 prompts · 90 minutes · your most important ritual</p>
+      <div class="pills-row">
+        <div class="pill"><div class="pill-dot" style="background:var(--gold)"></div>Look back</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--blue)"></div>Learn</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--accent)"></div>Look ahead</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:var(--purple)"></div>Vision</div>
+        <div style="color:var(--ink-muted);font-size:12px;">→</div>
+        <div class="pill"><div class="pill-dot" style="background:#c9a96e)"></div>Commit</div>
+      </div>
+      <button class="start-btn">Begin the annual review →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REVIEW SESSION (shared) ═══ -->
+<div id="review-session" class="page">
+  <div class="wrap">
+    <span class="back-link" id="rev-back">← Back</span>
+    <div class="steps-row" id="rev-steps"></div>
+    <div id="rev-content"></div>
+  </div>
+</div>
+
+<!-- ═══ REVIEW DONE (shared) ═══ -->
+<div id="review-done" class="page">
+  <div class="done-wrap">
+    <div class="done-mark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4L16 6" stroke="#2d5a3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2 class="done-title" id="done-title">Review <em>complete.</em></h2>
+    <p class="done-sub" id="done-sub"></p>
+    <div class="done-actions"><button class="dbp" id="done-back-btn">Back to sessions</button><button class="dbs" onclick="switchTab('daily')">Do a daily session</button></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const REVIEWS = {
+  weekly: {
+    tab: 'weekly', title: 'Weekly', doneTitle: 'Week <em>reviewed.</em>',
+    doneSub: 'You looked back, you learned, you set your intention. That\'s a week well closed.',
+    steps: ['Look back','Learn','Look ahead'],
+    sections: [
+      { tag:'Section 1 · Look back', title:'What <em>happened</em> this week?', prompt:'"Don\'t analyse yet — just recall. What actually took place? What did you do, who did you see, what came up?"', mins:7, ph:'Write what happened this week…' },
+      { tag:'Section 2 · Learn', title:'What did you <em>avoid</em> — and why?', prompt:'"The things that stayed on your list. The conversations you postponed. What was underneath that avoidance?"', mins:7, ph:'Write about what you avoided…' },
+      { tag:'Section 3 · Look ahead', title:'What do you want to <em>carry</em> into next week?', prompt:'"One intention. One thing to do differently. One thing to protect."', mins:6, ph:'Write your intention for next week…' }
+    ]
+  },
+  monthly: {
+    tab: 'monthly', title: 'Monthly', doneTitle: 'Month <em>seen clearly.</em>',
+    doneSub: 'You found the pattern, understood your energy, and set your focus. That\'s a month well reviewed.',
+    steps: ['Look back','Learn','Look ahead'],
+    sections: [
+      { tag:'Section 1 · Look back', title:'What <em>pattern</em> are you noticing?', prompt:'"Step back from the individual days. What keeps showing up? What theme runs through this month?"', mins:15, ph:'Write the patterns you\'re noticing…' },
+      { tag:'Section 2 · Learn', title:'What <em>drained</em> vs energised you?', prompt:'"Be honest about what cost you and what gave back. This is information, not judgment."', mins:13, ph:'Write what drained and energised you…' },
+      { tag:'Section 3 · Look ahead', title:'What do you want to <em>focus on</em> next month?', prompt:'"Not a to-do list — one real priority. What would make next month feel meaningful?"', mins:12, ph:'Write your focus for next month…' }
+    ]
+  },
+  quarterly: {
+    tab: 'quarterly', title: 'Quarterly', doneTitle: 'Quarter <em>distilled.</em>',
+    doneSub: '90 days, reviewed and understood. You\'ve set your direction for what comes next.',
+    steps: ['Look back','Learn','Look ahead','Commit'],
+    sections: [
+      { tag:'Section 1 · Look back', title:'What <em>actually happened</em> this quarter?', prompt:'"Not what you planned — what happened. Walk through the three months. What stands out? What surprised you? What mattered more than you expected?"', mins:15, ph:'Write what happened this quarter…' },
+      { tag:'Section 2 · Learn', title:'What did you <em>start or stop?</em> What did you avoid?', prompt:'"The honest inventory. What did you begin, what did you let go, what did you keep putting off? What does that tell you about where you are?"', mins:15, ph:'Write what you started, stopped, avoided…' },
+      { tag:'Section 3 · Look ahead', title:'What do you want the next 90 days to <em>feel like?</em>', prompt:'"Not goals yet — feeling first. When you look back on next quarter, what would make it feel like time well spent? What kind of person do you want to be in it?"', mins:15, ph:'Write how you want the next quarter to feel…' },
+      { tag:'Section 4 · Commit', title:'What is the one thing that would make this quarter <em>matter?</em>', prompt:'"If you could only move one thing forward in the next 90 days — what would it be? Write it clearly. Write why it matters."', mins:15, ph:'Write your one commitment for this quarter…' }
+    ]
+  },
+  yearly: {
+    tab: 'yearly', title: 'Yearly', doneTitle: 'Year <em>in full.</em>',
+    doneSub: 'You\'ve looked at the whole year with honesty and intention. That\'s a rare and important thing.',
+    steps: ['Look back','Learn','Look ahead','Vision','Commit'],
+    sections: [
+      { tag:'Section 1 · Look back', title:'What <em>defined</em> this year?', prompt:'"Walk through the year month by month if you need to. What stands out? What changed? What are the two or three things that, when you look back, defined this year?"', mins:18, ph:'Write what defined this year…' },
+      { tag:'Section 2 · Learn', title:'What did you <em>learn</em> about yourself this year?', prompt:'"Not lessons from books — lessons from living. What do you know about yourself now that you didn\'t know twelve months ago? What did this year reveal?"', mins:18, ph:'Write what you learned about yourself…' },
+      { tag:'Section 3 · Look ahead', title:'What do you want to <em>leave behind?</em>', prompt:'"What pattern, habit, belief, or way of being served you before but doesn\'t serve you now? What are you ready to stop carrying into next year?"', mins:18, ph:'Write what you\'re ready to leave behind…' },
+      { tag:'Section 4 · Vision', title:'Who do you want to <em>become</em> next year?', prompt:'"Not what you want to do — who you want to be. Describe the person you\'re becoming. How do they think, how do they spend their time, what do they prioritise?"', mins:18, ph:'Write who you want to become…' },
+      { tag:'Section 5 · Commit', title:'What is your <em>one word</em> for next year?', prompt:'"A word that captures your intention for the year ahead. Not a goal — a quality, a direction, a way of being. Write the word, then write why."', mins:18, ph:'Write your word and why you chose it…' }
+    ]
+  }
+};
+
+const DAILY_PROMPTS = [
+  "What's weighing on you right now?",
+  "What's one thing you keep putting off — and why?",
+  "What would make today feel like enough?",
+  "Who or what gave you energy this week?",
+  "What are you pretending not to know?"
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let activeTab = 'daily';
+let revType = null, revStep = 0;
+let timers = {};
+
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('t-'+tab).classList.add('active');
+  show(tab+'-browse');
+}
+
+// ── DAILY ─────────────────────────────────────────────────
+function buildDailyCards() {
+  const el = document.getElementById('daily-cards');
+  el.innerHTML = DAILY_PROMPTS.map((q,i) => `
+    <div class="prompt-card ${i===0?'featured':''}" onclick="startDaily(${i})">
+      <div>
+        <p class="card-tag">${i===0?'Today · Recommended':'Daily prompt'}</p>
+        <p class="card-q">${q}</p>
+        <p class="card-meta">5 min · Free write</p>
+      </div>
+      <span class="card-arrow">→</span>
+    </div>`).join('');
+}
+
+function startDaily(i) {
+  document.getElementById('d-q').innerHTML = '"'+DAILY_PROMPTS[i]+'"';
+  tReset('d', 300);
+  document.getElementById('d-w').value = '';
+  document.getElementById('d-wc').textContent = '0 words';
+  show('daily-session');
+  setTimeout(() => document.getElementById('d-w').focus(), 100);
+}
+
+document.getElementById('d-w').addEventListener('input', function() {
+  document.getElementById('d-wc').textContent = this.value.trim().split(/\s+/).filter(x=>x).length + ' words';
+});
+
+// ── TIMER ENGINE ──────────────────────────────────────────
+function tToggle(id) {
+  if (!timers[id]) timers[id] = { running:false, iv:null, sec:0, total:0 };
+  const t = timers[id];
+  const btnEl = document.getElementById(id+'-b');
+  const dispEl = document.getElementById(id+'-t');
+  const progEl = document.getElementById(id+'-p');
+  if (!t.running) {
+    t.running = true;
+    btnEl.textContent = 'Pause'; btnEl.className = 'tbtn pau';
+    dispEl.classList.add('run');
+    t.iv = setInterval(() => {
+      t.sec--;
+      if (progEl) progEl.style.width = ((t.total - t.sec) / t.total * 100) + '%';
+      if (t.sec <= 0) {
+        clearInterval(t.iv); t.running = false;
+        dispEl.textContent = '0:00'; dispEl.className = 't-display fin';
+        btnEl.textContent = 'Done ✓'; btnEl.className = 'tbtn rst';
+        if (progEl) progEl.style.width = '100%';
+        return;
+      }
+      dispEl.textContent = Math.floor(t.sec/60)+':'+String(t.sec%60).padStart(2,'0');
+    }, 1000);
+  } else {
+    clearInterval(t.iv); t.running = false;
+    btnEl.textContent = 'Resume'; btnEl.className = 'tbtn go';
+    dispEl.classList.remove('run');
+  }
+}
+
+function tReset(id, secs) {
+  if (!timers[id]) timers[id] = {};
+  const t = timers[id];
+  if (t.iv) clearInterval(t.iv);
+  t.running = false; t.sec = secs; t.total = secs;
+  const m = Math.floor(secs/60), s = secs%60;
+  const disp = m+':'+(s===0?'00':String(s).padStart(2,'0'));
+  const dispEl = document.getElementById(id+'-t');
+  const btnEl = document.getElementById(id+'-b');
+  const progEl = document.getElementById(id+'-p');
+  if (dispEl) { dispEl.textContent = disp; dispEl.className = 't-display'; }
+  if (btnEl) { btnEl.textContent = 'Start timer'; btnEl.className = 'tbtn go'; }
+  if (progEl) progEl.style.width = '0%';
+}
+
+// Expose for inline onclick
+window.tToggle = tToggle;
+window.tReset = tReset;
+
+// ── REVIEW ENGINE ─────────────────────────────────────────
+function startReview(type) {
+  revType = type;
+  revStep = 0;
+  const R = REVIEWS[type];
+  document.getElementById('rev-back').onclick = () => show(type+'-browse');
+  document.getElementById('done-back-btn').onclick = () => show(type+'-browse');
+  document.getElementById('done-title').innerHTML = R.doneTitle;
+  document.getElementById('done-sub').textContent = R.doneSub;
+  R.sections.forEach((_,i) => {
+    const sid = type+'_'+i;
+    tReset(sid, R.sections[i].mins * 60);
+  });
+  renderStep(type, 0);
+  show('review-session');
+}
+
+function renderStep(type, step) {
+  revStep = step;
+  const R = REVIEWS[type];
+  const total = R.sections.length;
+
+  // Steps bar
+  document.getElementById('rev-steps').innerHTML = R.steps.map((lbl,i) => {
+    const cls = i < step ? 'done' : i === step ? 'active' : '';
+    const numContent = i < step ? '✓' : i+1;
+    return `
+      <div class="step-item" onclick="revGoTo(${i})">
+        <div class="step-num ${cls}">${numContent}</div>
+        <span class="step-lbl ${cls}">${lbl}</span>
+      </div>
+      ${i < total-1 ? `<div class="step-con ${i<step?'done':''}"></div>` : ''}
+    `;
+  }).join('');
+
+  // Section content
+  const sec = R.sections[step];
+  const sid = type+'_'+step;
+  const prevBtn = step > 0 ? `<button class="btn-prev" onclick="revGoTo(${step-1})">← ${R.steps[step-1]}</button>` : '<div></div>';
+  const nextBtn = step < total-1
+    ? `<button class="btn-next" onclick="revGoTo(${step+1})">${R.steps[step+1]} →</button>`
+    : `<button class="btn-next" onclick="finishReview()">Complete session →</button>`;
+
+  const stored = (window._revTexts && window._revTexts[type] && window._revTexts[type][step]) || '';
+
+  document.getElementById('rev-content').innerHTML = `
+    <div class="section-card">
+      <p class="s-tag">${sec.tag}</p>
+      <h3 class="s-title">${sec.title}</h3>
+      <p class="s-prompt">${sec.prompt}</p>
+      <div class="timer-row">
+        <div class="t-display" id="${sid}-t">${Math.floor(sec.mins/1)+'m'}</div>
+        <button class="tbtn go" id="${sid}-b" onclick="tToggle('${sid}')">Start timer</button>
+        <button class="tbtn rst" onclick="tReset('${sid}',${sec.mins*60})">Reset</button>
+      </div>
+      <div class="prog"><div class="prog-fill" id="${sid}-p"></div></div>
+      <textarea id="${sid}-w" rows="${sec.mins > 15 ? 12 : 8}" placeholder="${sec.ph}">${stored}</textarea>
+      <div class="s-foot"><span class="wc" id="${sid}-wc">${stored.trim().split(/\s+/).filter(x=>x).length} words</span><span class="wc">Nothing is saved.</span></div>
+    </div>
+    <div class="nav-btns">${prevBtn}${nextBtn}</div>
+  `;
+
+  // Re-init timer display properly
+  tReset(sid, sec.mins * 60);
+
+  // Word count listener
+  document.getElementById(sid+'-w').addEventListener('input', function() {
+    if (!window._revTexts) window._revTexts = {};
+    if (!window._revTexts[type]) window._revTexts[type] = {};
+    window._revTexts[type][step] = this.value;
+    document.getElementById(sid+'-wc').textContent = this.value.trim().split(/\s+/).filter(x=>x).length + ' words';
+  });
+}
+
+function revGoTo(step) { renderStep(revType, step); }
+function finishReview() { show('review-done'); }
+window.revGoTo = revGoTo;
+window.finishReview = finishReview;
+window.startReview = startReview;
+window.startDaily = startDaily;
+window.switchTab = switchTab;
+
+// ── INIT ──────────────────────────────────────────────────
+buildDailyCards();
+show('daily-browse');
+</script>
