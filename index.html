@@ -94,9 +94,40 @@ textarea::placeholder{color:var(--ink-muted);font-style:italic;}
 .done-actions{display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;}
 .dbp{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
 .dbs{background:none;border:1px solid var(--border-mid);border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+.feedback-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin:32px auto 0;max-width:480px;text-align:left;}
+.feedback-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:6px;}
+.feedback-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--ink);margin-bottom:4px;}
+.feedback-sub{font-size:13px;font-weight:300;color:var(--ink-soft);margin-bottom:16px;}
+.feedback-toggle{background:none;border:none;font-size:13px;color:var(--accent);cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;font-weight:500;}
+.feedback-form{display:none;margin-top:16px;}
+.feedback-form.open{display:block;}
 
 .page{display:none;}
 
+.feedback-wrap{max-width:520px;margin:0 auto;padding:64px 48px;}
+.feedback-q{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--ink);margin-bottom:6px;line-height:1.2;}
+.feedback-q em{font-style:italic;color:var(--accent);}
+.feedback-hint{font-size:13px;font-weight:300;color:var(--ink-muted);margin-bottom:24px;}
+.feedback-divider{height:1px;background:var(--border);margin:32px 0;}
+.emoji-row{display:flex;gap:10px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;}
+.emoji-btn{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.emoji-btn:hover{border-color:var(--border-mid);transform:scale(1.08);}
+.emoji-btn.selected{border-color:var(--accent);background:var(--accent-light);}
+.emoji-labels{display:flex;justify-content:space-between;padding:0 4px;margin-bottom:24px;}
+.emoji-label{font-size:11px;color:var(--ink-muted);}
+.choice-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.choice-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--ink-soft);text-align:left;transition:all 0.15s;display:flex;align-items:center;gap:10px;}
+.choice-btn:hover{border-color:var(--border-mid);color:var(--ink);}
+.choice-btn.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
+.choice-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.choice-btn.selected .choice-check{background:var(--accent);border-color:var(--accent);}
+.choice-check-inner{width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;}
+.choice-btn.selected .choice-check-inner{opacity:1;}
+.submit-btn{width:100%;padding:14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity 0.15s;margin-top:4px;}
+.submit-btn:hover{opacity:0.85;}
+.submit-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.skip-link{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--ink-muted);cursor:pointer;}
+.skip-link:hover{color:var(--ink-soft);}
 @media (max-width: 600px) {
   .tabs-bar{padding:0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .tab-btn{padding:12px 10px;font-size:11px;gap:5px;}
@@ -171,7 +202,7 @@ textarea::placeholder{color:var(--ink-muted);font-style:italic;}
     <div class="prog"><div class="prog-fill" id="d-p"></div></div>
     <textarea id="d-w" rows="10" placeholder="Start writing here…"></textarea>
     <div class="s-foot"><span class="wc" id="d-wc">0 words</span><span class="wc">Nothing is saved.</span></div>
-    <button class="btn-next" style="margin-top:16px;width:100%;justify-content:center;" onclick="show('daily-done')">I'm done writing →</button>
+    <button class="btn-next" style="margin-top:16px;width:100%;justify-content:center;" onclick="goToFeedback('daily')">I'm done writing →</button>
   </div>
 </div>
 
@@ -185,10 +216,74 @@ textarea::placeholder{color:var(--ink-muted);font-style:italic;}
       <button class="dbp" onclick="show('daily-browse')">Back to sessions</button>
       <button class="dbs" onclick="switchTab('weekly')">Try the weekly session →</button>
     </div>
+    <div class="feedback-card">
+      <p class="feedback-label">Quick feedback</p>
+      <p class="feedback-title">How was your session?</p>
+      <p class="feedback-sub">Takes 30 seconds. Helps Clearday improve.</p>
+      <button class="feedback-toggle" onclick="toggleFeedback('daily-fb')">Share feedback →</button>
+      <div class="feedback-form" id="daily-fb">
+        <iframe src="https://tally.so/embed/LZ0R1p?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="320" frameborder="0" marginheight="0" marginwidth="0" title="Session feedback"></iframe>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- WEEKLY BROWSE -->
+<!-- FEEDBACK SCREEN -->
+<div id="feedback-screen" class="page">
+  <div class="feedback-wrap">
+    <p class="eyebrow" id="fb-session-label">Daily session · 5 min</p>
+
+    <h2 class="feedback-q">How did you <em>feel</em> after?</h2>
+    <p class="feedback-hint">Pick the emoji that fits best.</p>
+    <div class="emoji-row">
+      <button class="emoji-btn" onclick="selectEmoji(this,'😔')" title="Low">😔</button>
+      <button class="emoji-btn" onclick="selectEmoji(this,'😐')" title="Neutral">😐</button>
+      <button class="emoji-btn" onclick="selectEmoji(this,'🙂')" title="Good">🙂</button>
+      <button class="emoji-btn" onclick="selectEmoji(this,'😊')" title="Great">😊</button>
+      <button class="emoji-btn" onclick="selectEmoji(this,'✨')" title="Amazing">✨</button>
+    </div>
+    <div class="emoji-labels">
+      <span class="emoji-label">Low</span>
+      <span class="emoji-label">Amazing</span>
+    </div>
+
+    <div class="feedback-divider"></div>
+
+    <h2 class="feedback-q">What <em>brought</em> you here?</h2>
+    <p class="feedback-hint">Select all that apply.</p>
+    <div class="choice-grid">
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        I want to journal but can never sit down and do it
+      </button>
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        I'm going through a transition or big change
+      </button>
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        I want to understand myself better
+      </button>
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        I need more clarity and direction in my life
+      </button>
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        Someone recommended Clearday to me
+      </button>
+      <button class="choice-btn" onclick="toggleChoice(this)">
+        <div class="choice-check"><div class="choice-check-inner"></div></div>
+        Just exploring — saw it online
+      </button>
+    </div>
+
+    <button class="submit-btn" id="fb-submit" onclick="submitFeedback()">Submit feedback</button>
+    <span class="skip-link" onclick="skipFeedback()">Skip — take me to the done screen</span>
+  </div>
+</div>
+
+
 <div id="weekly-browse" class="page">
   <div class="wrap">
     <p class="eyebrow">Weekly · 20 min</p>
@@ -300,6 +395,15 @@ textarea::placeholder{color:var(--ink-muted);font-style:italic;}
     <div class="done-actions">
       <button class="dbp" id="done-back-btn">Back to sessions</button>
       <button class="dbs" onclick="switchTab('daily')">Do a daily session</button>
+    </div>
+    <div class="feedback-card">
+      <p class="feedback-label">Quick feedback</p>
+      <p class="feedback-title">How was your session?</p>
+      <p class="feedback-sub">Takes 30 seconds. Helps Clearday improve.</p>
+      <button class="feedback-toggle" onclick="toggleFeedback('review-fb')">Share feedback →</button>
+      <div class="feedback-form" id="review-fb">
+        <iframe src="https://tally.so/embed/LZ0R1p?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="300" frameborder="0" marginheight="0" marginwidth="0" title="Session feedback"></iframe>
+      </div>
     </div>
   </div>
 </div>
@@ -430,7 +534,7 @@ function renderStep(type,step){
   const sid=type+'_'+step;
   const stored=(revTexts[type]&&revTexts[type][step])||'';
   const prevBtn=step>0?`<button class="btn-prev" onclick="renderStep('${type}',${step-1})">← ${R.steps[step-1]}</button>`:'<div></div>';
-  const nextBtn=step<total-1?`<button class="btn-next" onclick="renderStep('${type}',${step+1})">${R.steps[step+1]} →</button>`:`<button class="btn-next" onclick="show('review-done')">Complete session →</button>`;
+  const nextBtn=step<total-1?`<button class="btn-next" onclick="renderStep('${type}',${step+1})">${R.steps[step+1]} →</button>`:`<button class="btn-next" onclick="goToFeedback('${type}')">Complete session →</button>`;
   document.getElementById('rev-content').innerHTML=`
     <div class="section-card">
       <p class="s-tag">${sec.tag}</p>
@@ -452,6 +556,70 @@ function renderStep(type,step){
     revTexts[type][step]=this.value;
     document.getElementById(sid+'-wc').textContent=this.value.trim().split(/\s+/).filter(x=>x).length+' words';
   });
+}
+
+let fbSessionType = 'daily';
+let fbEmoji = null;
+let fbChoices = [];
+const TALLY_URL = 'https://tally.so/r/XXXXXXX';
+
+function goToFeedback(type) {
+  fbSessionType = type;
+  fbEmoji = null;
+  fbChoices = [];
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+  const labels = {daily:'Daily session · 5 min',weekly:'Weekly session · 20 min',monthly:'Monthly session · 40 min',quarterly:'Quarterly session · 60 min',yearly:'Yearly session · 90 min'};
+  document.getElementById('fb-session-label').textContent = labels[type] || 'Session';
+  show('feedback-screen');
+  window.scrollTo(0,0);
+}
+
+function selectEmoji(btn, emoji) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  fbEmoji = emoji;
+}
+
+function toggleChoice(btn) {
+  btn.classList.toggle('selected');
+  const text = btn.textContent.trim();
+  if (btn.classList.contains('selected')) {
+    fbChoices.push(text);
+  } else {
+    fbChoices = fbChoices.filter(c => c !== text);
+  }
+}
+
+function submitFeedback() {
+  const doneId = fbSessionType === 'daily' ? 'daily-done' : 'review-done';
+  show(doneId);
+  window.scrollTo(0,0);
+}
+
+function skipFeedback() {
+  const doneId = fbSessionType === 'daily' ? 'daily-done' : 'review-done';
+  show(doneId);
+  window.scrollTo(0,0);
+}
+
+function toggleFeedback(id) {
+  const form = document.getElementById(id);
+  const btn = form.previousElementSibling;
+  form.classList.toggle('open');
+  btn.textContent = form.classList.contains('open') ? 'Hide feedback ↑' : 'Share feedback →';
+}
+
+function toggleFeedback(id) {
+  const form = document.getElementById(id);
+  const btn = form.previousElementSibling;
+  if (form.classList.contains('open')) {
+    form.classList.remove('open');
+    btn.textContent = 'Share feedback →';
+  } else {
+    form.classList.add('open');
+    btn.textContent = 'Hide feedback ↑';
+  }
 }
 
 buildDailyCards();
